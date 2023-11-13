@@ -215,7 +215,7 @@
                 class="form-check-input"
                 type="checkbox"
                 role="switch"
-                id="flexSwitchCheckChecked"
+                id="ad_principal"
                 checked
               />
               <label
@@ -349,7 +349,10 @@
         const date = document.querySelector('input#client_date').value;
         const fone = Number(document.querySelector('input#client_fone').value);
         const cel = Number(document.querySelector('input#client_cel').value);
-        if (name && cpf) await newClient({ name, cpf, date, fone, cel });
+        const ad_principal = document.querySelector('input#ad_principal').checked;
+        console.log(ad_principal);
+        if (name && cpf) return await newClient({ name, cpf, date, fone, cel });
+        return alert('Digite o CPF');
       });
 
     document
@@ -431,7 +434,7 @@
     }
     getClients();
 
-    // document.querySelector('#cadastro_btn').setAttribute('disabled', true);
+    document.querySelector('#cadastro_btn').setAttribute('disabled', true);
 
     async function loginUser(payload) {
       let database = await db;
@@ -471,6 +474,7 @@
       let database = await db;
       const checkCpf = database.exec('SELECT * FROM clients WHERE cpf = ?', [payload.cpf]);
       if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
+      const principal = payload.ad_principal ? 1 : 0
       const clientInfo = [
         null,
         payload.name,
@@ -478,9 +482,9 @@
         payload.date,
         payload.fone,
         payload.cel,
-        '1',
+        principal,
       ];
-      database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', clientInfo);
+      const clientAdded = await database.exec('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', clientInfo);
       clearClientForm();
       addClient(clientInfo);
       return alert('Cliente cadastrado!');
