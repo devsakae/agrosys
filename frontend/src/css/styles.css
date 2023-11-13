@@ -39,10 +39,12 @@
 }
 
 .optionDisplay {
+  padding-top: 5vh;
+  position: relative;
   display: none;
   flex-direction: column;
-  height: 90vh;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  overflow-y: auto;
   gap: 20px;
 }

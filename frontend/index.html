@@ -37,7 +37,8 @@
       CREATE TABLE clients (id integer primary key, name text, cpf integer, data date, tel integer, cel integer, addresses text); \
       CREATE TABLE addresses (cep integer primary key not null, clientId integer, rua text, bairro text, cidade text, estado text, pais text, principal integer); \
       INSERT INTO users VALUES (null, 'admin', 'password'); \
-      INSERT INTO clients VALUES (0, 'Fulano de tal', 00000000000, '1990-01-01', 2199990000, 4898881234, '0'); \
+      INSERT INTO clients VALUES (null, 'Fulano de tal', 11122233344, '1990-01-01', 2199990000, 4898881234, '0'); \
+      INSERT INTO clients VALUES (null, 'Sicrano de tal de tal', 99988877766, '2010-02-28', 1199821213, 5192839192, '0'); \
       INSERT INTO addresses VALUES (11111000, 0, 'Rua das Alfaces, 10', 'Centro', 'Florespólis', 'SC', 'Brasil', 1); \
       INSERT INTO addresses VALUES (22222111, 0, 'Rua dos Mariscos, 999', 'Litoral', 'Litorópolis', 'SC', 'Brasil', 0); \
       ";
@@ -117,9 +118,11 @@
           </form>
         </div>
 
-        <!-- Sistema de cadastro de clientes -->
+        <!-- Sistema gerenciador de clientes -->
         <div id="cadastro" class="optionDisplay">
-          <h2>Cadastro de clientes</h2>
+          <h2>Sistema gerenciador de clientes</h2>
+          <div id='clientList' class="list-group">
+          </div>          
           <form id="formClient" class="container">
             <div class="text-left mb-3">
               <label for="client_name">Nome completo</label>
@@ -215,9 +218,12 @@
                 id="flexSwitchCheckChecked"
                 checked
               />
-              <label class="form-check-label" for="flexSwitchCheckChecked"
-                >Este é o endereço principal do cliente</label
+              <label
+                class="form-check-label"
+                for="flexSwitchCheckChecked"
               >
+                Este é o endereço principal do cliente
+              </label>
             </div>
             <div class="mt-4">
               <button id="handleClientData" class="btn btn-primary">
@@ -240,7 +246,7 @@
                 <p class="card-text">Envie um BD</p>
                 <input
                   id="importer"
-                  class="form-control mb-3"
+                  class="form-control"
                   type="file"
                   accept=".wal, .sqlite, .db"
                   required
@@ -267,7 +273,6 @@
 
       <!-- Menu de opções -->
       <section id="options_btn" class="options">
-        <button id="teste" class="btn btn-primary m-2">Teste</button>
         <button
           id="info"
           class="btn btn-warning m-2"
@@ -280,14 +285,14 @@
           class="btn btn-primary m-2"
           onclick="toggleOption('#login')"
         >
-          Login/Novo usuário
+          Login
         </button>
         <button
           id="cadastro_btn"
           class="btn btn-primary m-2"
           onclick="toggleOption('#cadastro')"
         >
-          Sistema de cadastro
+          Sistema
         </button>
         <button
           id="configs_btn"
@@ -309,11 +314,6 @@
       );
       document.querySelector(id).style.display = 'flex';
     };
-
-    document.getElementById('teste').addEventListener('click', async (e) => {
-      const database = await db;
-      console.log(database.exec('SELECT * FROM users;'));
-    });
 
     document
       .getElementById('handleUserRegister')
@@ -356,18 +356,22 @@
       .getElementById('clearClientForm')
       .addEventListener('click', (e) => {
         e.preventDefault();
-        document.querySelector('input#client_name').value = '';
-        document.querySelector('input#client_cpf').value = '';
-        document.querySelector('input#client_date').value = '';
-        document.querySelector('input#client_fone').value = '';
-        document.querySelector('input#client_cel').value = '';
-        document.querySelector('input#ad_cep').value = '';
-        document.querySelector('input#ad_rua').value = '';
-        document.querySelector('input#ad_bairro').value = '';
-        document.querySelector('input#ad_cidade').value = '';
-        document.querySelector('input#ad_estado').value = '';
-        document.querySelector('input#ad_pais').value = '';
+        clearClientForm();
       });
+
+    function clearClientForm() {
+      document.querySelector('input#client_name').value = '';
+      document.querySelector('input#client_cpf').value = '';
+      document.querySelector('input#client_date').value = '';
+      document.querySelector('input#client_fone').value = '';
+      document.querySelector('input#client_cel').value = '';
+      document.querySelector('input#ad_cep').value = '';
+      document.querySelector('input#ad_rua').value = '';
+      document.querySelector('input#ad_bairro').value = '';
+      document.querySelector('input#ad_cidade').value = '';
+      document.querySelector('input#ad_estado').value = '';
+      document.querySelector('input#ad_pais').value = '';
+    }
 
     document
       .getElementById('exporter_btn')
@@ -394,12 +398,40 @@
             locateFile: (file) => `https://sql.js.org/dist/${file}`,
           })
           .then((SQL) => new SQL.Database(Uints))
-          .finally(() => alert('Database importada com sucesso!'));
+          .finally(() => {
+            getClients();
+            return alert('Database importada')
+          });
       };
       r.readAsArrayBuffer(file);
     });
 
-    document.querySelector('#cadastro_btn').setAttribute('disabled', true);
+    const addClient = (client) => {
+      const clientList = document.querySelector('#clientList');
+      const clientLi = document.createElement('a');
+      clientLi.classList.add('list-group-item');
+      clientLi.classList.add('list-group-item-action');
+      clientLi.innerText = client[1] + ' (CPF ' + client[2] + ')';
+      clientList.append(clientLi);
+    }
+
+    const getClients = async () => {
+      let database = await db;
+      const allClients = await database.exec('SELECT * FROM clients');
+      if (allClients[0].values.length > 0) {
+        const clientList = document.querySelector('#clientList');
+        const clientDiv = document.createElement('div');
+        clientDiv.classList.add('list-group');
+        const clientsOnScreen = document.querySelectorAll('a.list-group-item-action');
+        let clientsToAdd = allClients[0].values;
+        const spliced = clientsToAdd.splice((clientsToAdd.length - clientsOnScreen.length) + 1);
+        if (spliced.length > 0) clientsToAdd = spliced;
+        clientsToAdd.forEach((client) => addClient(client));
+      }
+    }
+    getClients();
+
+    // document.querySelector('#cadastro_btn').setAttribute('disabled', true);
 
     async function loginUser(payload) {
       let database = await db;
@@ -434,15 +466,12 @@
         alert(err);
       }
     }
-
+    
     async function newClient(payload) {
       let database = await db;
-      const checkCpf = database.exec(`SELECT * FROM clients WHERE cpf = ?`, [
-        payload.cpf,
-      ]);
-      if (checkCpf.length > 0)
-        return alert('CPF já cadastrado no banco de dados');
-      database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', [
+      const checkCpf = database.exec('SELECT * FROM clients WHERE cpf = ?', [payload.cpf]);
+      if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
+      const clientInfo = [
         null,
         payload.name,
         payload.cpf,
@@ -450,7 +479,10 @@
         payload.fone,
         payload.cel,
         '1',
-      ]);
+      ];
+      database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', clientInfo);
+      clearClientForm();
+      addClient(clientInfo);
       return alert('Cliente cadastrado!');
     }
   </script>
