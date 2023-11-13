@@ -110,8 +110,8 @@
               <button id="handleUserLogin" class="btn btn-primary">
                 Fazer login
               </button>
-              <button id="clearLoginForm" class="btn btn-danger">Limpar</button>
-              <button id="handleUserRegister" class="btn btn-secondary">
+              <button id="clearLoginForm" class="btn btn-secondary">Limpar</button>
+              <button id="handleUserRegister" class="btn btn-danger">
                 Novo usuário
               </button>
             </div>
@@ -121,9 +121,10 @@
         <!-- Sistema gerenciador de clientes -->
         <div id="cadastro" class="optionDisplay">
           <h2>Sistema gerenciador de clientes</h2>
-          <div id='clientList' class="list-group">
-          </div>          
-          <form id="formClient" class="container">
+          <a class="btn btn-primary" data-bs-toggle="collapse" href="#formClient" role="button" aria-expanded="false" aria-controls="formClient">
+            Cadastrar novo cliente
+          </a>
+          <form id="formClient" class="container collapse">
             <div class="text-left mb-3">
               <label for="client_name">Nome completo</label>
               <input
@@ -234,6 +235,11 @@
               </button>
             </div>
           </form>
+          <a class="btn btn-primary" data-bs-toggle="collapse" href="#clientList" role="button" aria-expanded="false" aria-controls="clientList">
+            Ver clientes cadastrados
+          </a>        
+          <div id='clientList' class="list-group collapse">
+          </div>
         </div>
 
         <!-- Import/export db -->
@@ -321,7 +327,8 @@
         e.preventDefault();
         const name = document.querySelector('input#login').value;
         const password = document.querySelector('input#password').value;
-        if (name && password) await newUser({ name: name, password: password });
+        if (name && password) return await newUser({ name: name, password: password });
+        return alert('Digite o usuário e senha!')
       });
 
     document
