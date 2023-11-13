@@ -1,0 +1,127 @@
+<script src="sql.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login de usuários - Agrosys</title>
+    <link rel="stylesheet" type="text/css" href="../src/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script src="../src/database/sql/sql-asm.js"></script>
+<script>
+  async function start() {
+      const initSqlJs = window.initSqlJs;
+      const SQL = await initSqlJs({
+        locateFile: file => `../src/database/sql/${file}`
+      });
+      const db = new SQL.Database();
+      console.log(db);
+      db.run('SELECT * FROM users;')
+    }
+    start();
+</script> -->
+  </head>
+
+  <body>
+    <main class="loginScreen">
+      <nav class="navbar bg-body-secondary" data-bs-theme="dark">
+        <div class="container-fluid" style="height: 8vh">
+          <a class="navbar-brand" href="../">
+            <img
+              src="https://www.agrosys.com.br/media/img/assets/brand.png"
+              alt="Logo"
+              height="24"
+            />
+          </a>
+        </div>
+      </nav>
+      <section class="container-fluid">
+        <div class="row align-items-center" style="height: 90vh">
+          <div class="col text-center">
+            <form>
+              <div>
+                <h4 class="mb-4">Faça seu login</h4>
+                <div class="container-sm">
+                  <div class="text-left mb-3">
+                    <input
+                      id="login"
+                      type="text"
+                      class="form-control"
+                      placeholder="Usuário"
+                      required
+                    />
+                  </div>
+                  <div class="text-left mb-3">
+                    <input
+                      id="password"
+                      type="password"
+                      class="form-control"
+                      placeholder="Senha"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button id="test" class="btn btn-primary">Enviar</button>
+                <button class="btn btn-danger">Novo usuário</button>
+              </div>
+            </form>
+          </div>
+          <div class="col text-center" id="frontImage">
+            <!-- <script>
+              if (!window.FileReader) {
+                alert(
+                  "Your browser does not support HTML5 'FileReader' function required to open a file.",
+                );
+              } else {
+                var raw_output = document.getElementById('raw-output');
+                var openFile = function (event) {
+                  var input = event.target;
+                  var fileredr = new FileReader();
+                  fileredr.onload = function (fle) {
+                    var arrayBuffer = fle.target.result;
+                    var uInt8Array = new Uint8Array(arrayBuffer);
+                    const db = new SQL.Database(uInt8Array);
+                    var stmt = "SELECT id, name FROM users;";
+                    const result = db.exec(stmt);
+                    console.log(stmt);
+                    var columns = result[0]['columns'];
+                    var colsHtml =
+                      '<tr><th>' + columns.join('</th><th>') + '</th></tr>';
+
+                    var valsHTML = [];
+                    var values = result[0]['values'];
+                    for (var v in values) {
+                      var valHTML =
+                        '<tr><td>' + values[v].join('</td><td>') + '</td></tr>';
+                      valsHTML.push(valHTML);
+                    }
+                    valsHTML = valsHTML.join('');
+                    raw_output.innerHTML =
+                      "<table class='table table-bordered w-100'><thead>" +
+                      colsHtml +
+                      '</thead><tbody>' +
+                      valsHTML +
+                      '</tbody></table>';
+                  };
+                  fileredr.readAsArrayBuffer(input.files[0]);
+                };
+              } // end if-else
+            </script> -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

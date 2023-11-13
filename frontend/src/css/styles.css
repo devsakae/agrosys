@@ -1,0 +1,48 @@
+*
+{
+  margin: 0;
+  padding: 0;
+  block-size: block;
+}
+
+.main
+{
+  font-family: 'Poppins', sans-serif;
+}
+
+.exhibit {
+  margin-bottom: 10vh;
+}
+
+.options
+{
+  height: 8vh;
+  position: fixed;
+  bottom: 0;
+  background-color: aliceblue;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#capa {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.limitador {
+  max-width: 600px;
+}
+
+.optionDisplay {
+  display: none;
+  flex-direction: column;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}

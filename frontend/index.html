@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="./src/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <title>Processo seletivo - Agrosys</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+  <script>
+    const db = window.initSqlJs({
+      locateFile: (file) => `https://sql.js.org/dist/${file}`
+    }).then((SQL) => new SQL.Database());
+
+    async function start() {
+      let database = await db;
+      const createTableUser =
+        "CREATE TABLE users (id integer primary key, name text, pass text); \
+  INSERT INTO users VALUES (0, 'admin', 'password'); \
+  CREATE TABLE clients (id integer primary key, name text, cpf integer, data date, tel integer, cel integer, addresses text); \
+  INSERT INTO clients VALUES (0, 'Cliente Teste', 00000000000, '1980-01-01', 2199990000, 4898881234, '0'); \
+  CREATE TABLE address (cep integer primary key not null, clientId integer, rua text, bairro text, cidade text, estado text, pais text);";
+      database.run(createTableUser);
+      // console.log(database.exec('SELECT * FROM clients'));
+    }
+    start();
+
+    async function newUser(payload) {
+      let database = await db;
+      const checkUser = database.exec(`SELECT * FROM users WHERE name = ?`, [payload.name]);
+      if (checkUser.length > 0) return alert('Usuário já existe!');
+      const totalUsers = database.exec('SELECT COUNT(*) FROM users');
+      database.run(`INSERT INTO users VALUES (?,?,?)`, [totalUsers[0].values[0][0], payload.name, payload.password]);
+      return alert('Usuário criado!');
+    }
+
+    async function loginUser(payload) {
+      let database = await db;
+      const checkUser = database.exec(`SELECT * FROM users WHERE name = ? AND pass = ?`, [payload.name, payload.password]);
+      if (checkUser.length > 0) return alert('Bem vindo!');
+      return alert('Dados inválidos!');
+    }
+
+    async function newClient(payload) {
+      console.log(payload);
+      let database = await db;
+      const checkCpf = database.exec(`SELECT * FROM clients WHERE cpf = ?`, [payload.cpf]);
+      if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
+      const totalClients = database.exec('SELECT COUNT(*) FROM clients');
+      console.log('Aqui vem')
+      // database.run(`INSERT INTO clients VALUES (2, 'Outro teste', 121212121, '1980-01-01', 2199990000, 4898881234, '0')`);
+      // console.log([totalClients[0].values[0][0], payload.name, payload.cpf, payload.data, payload.tel, payload.cel, '1']);
+      database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', [totalClients[0].values[0][0], payload.name, payload.cpf, payload.date, payload.fone, payload.cel, '1']);
+      console.log('Aqui não vem')
+      return alert('Cliente cadastrado!');
+    }
+
+  </script>
+</head>
+
+<body>
+  <main class="main container-fluid">
+    <section class="exhibit">
+
+      <!-- Welcome -->
+      <div id="capa">
+        <div class="limitador">
+          <h1>Avaliação técnica Agrosys</h1>
+          <legend>Projeto CRUD Web</legend>
+        </div>
+      </div>
+
+      <!-- Instruções -->
+      <div id="infotxt" class="optionDisplay">
+        <object data="./INFO.txt" type="text/plain" width="500" style="height: 300px">
+          <a href="./INFO.txt">Download</a>
+        </object>
+      </div>
+
+      <!-- Sistema de login -->
+      <div id="login" class="optionDisplay">
+        <h2>Acesso ao sistema</h2>
+        <form id="formLogin" class="container">
+          <div class="text-left mb-3">
+            <input id="login" type="text" class="form-control" placeholder="Usuário" aria-describedby="defaultUser"
+              required />
+            <div id="defaultUser" class="form-text">Teste com o username <strong>admin</strong></div>
+          </div>
+          <div class="text-left mb-3">
+            <input id="password" type="password" class="form-control" placeholder="Senha" aria-describedby='defaultPass'
+              required />
+            <div id="defaultPass" class="form-text">Teste com a senha <strong>password</strong></div>
+          </div>
+          <div>
+            <button id="handleUserLogin" class="btn btn-primary">Fazer login</button>
+            <button id="clearLoginForm" class="btn btn-danger">Limpar</button>
+            <button id="handleUserRegister" class="btn btn-secondary">Novo usuário</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Sistema de cadastro de clientes -->
+      <div id="cadastro" class="optionDisplay">
+        <h2>Cadastro de clientes</h2>
+        <form id="formClient" class="container">
+          <div class="text-left mb-3">
+            <label for='client_name'>Nome completo</label>
+            <input id="client_name" type="text" class="form-control" required />
+          </div>
+          <div class='row mb-3'>
+            <div class="col">
+              <label for='client_cpf'>CPF</label>
+              <input id="client_cpf" type="number" class="form-control" placeholder="Somente números" required />
+            </div>
+            <div class="col">
+              <label for='client_date'>Data de nascimento</label>
+              <input id="client_date" type="date" class="form-control" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for='client_fone'>Telefone principal</label>
+              <input id="client_fone" type="number" class="form-control" placeholder="Somente números" />
+            </div>
+            <div class="col">
+              <label for='client_cel'>Telefone celular</label>
+              <input id="client_cel" type="number" class="form-control" placeholder="Somente números" />
+            </div>
+          </div>
+          <div class='mt-4'>
+            <button id="handleClientData" class="btn btn-primary">Salvar</button>
+            <button id="clearClientForm" class="btn btn-danger">Limpar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Menu de opções -->
+    <section id="options" class="options">
+      <button id="info" class="btn btn-warning m-2" onclick="toggleOption('#infotxt')">
+        info.txt
+      </button>
+      <button id="login" class="btn btn-primary m-2" onclick="toggleOption('#login')">
+        Login/Novo usuário
+      </button>
+      <button id="cadastro" class="btn btn-primary m-2" onclick="toggleOption('#cadastro')">
+        Sistema de cadastro
+      </button>
+    </section>
+  </main>
+</body>
+<script>
+  const toggleOption = (id) => {
+    let optionsIds = ['#capa', '#infotxt', '#login', '#cadastro'];
+    let toRemove = optionsIds.indexOf(id);
+    optionsIds.splice(toRemove, 1);
+    optionsIds.forEach(
+      (i) => (document.querySelector(i).style.display = 'none'),
+    );
+    document.querySelector(id).style.display = 'flex';
+  };
+
+  document.getElementById("handleUserRegister").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const name = document.querySelector("input#login").value;
+    const password = document.querySelector("input#password").value;
+    if (name && password) await newUser({ name: name, password: password });
+  });
+
+  document.getElementById("handleUserLogin").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const name = document.querySelector("input#login").value;
+    const password = document.querySelector("input#password").value;
+    await loginUser({ name: name, password: password });
+  });
+
+  document.getElementById("clearLoginForm").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelector("input#login").value = '';
+    document.querySelector("input#password").value = '';
+  });
+
+  document.getElementById("handleClientData").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const name = document.querySelector("input#client_name").value;
+    const cpf = Number(document.querySelector("input#client_cpf").value);
+    const date = document.querySelector("input#client_date").value;
+    const fone = Number(document.querySelector("input#client_fone").value);
+    const cel = Number(document.querySelector("input#client_cel").value);
+    if (name && cpf) await newClient({ name, cpf, date, fone, cel });
+  });
+
+
+</script>
+
+</html>

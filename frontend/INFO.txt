@@ -1,0 +1,3 @@
+Como rodar este projeto?
+
+Abra o arquivo index.html no VSCode e clique em Live
