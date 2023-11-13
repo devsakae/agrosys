@@ -26,45 +26,21 @@
       let database = await db;
       const createTableUser =
         "CREATE TABLE users (id integer primary key, name text, pass text); \
-  INSERT INTO users VALUES (0, 'admin', 'password'); \
   CREATE TABLE clients (id integer primary key, name text, cpf integer, data date, tel integer, cel integer, addresses text); \
-  INSERT INTO clients VALUES (0, 'Cliente Teste', 00000000000, '1980-01-01', 2199990000, 4898881234, '0'); \
-  CREATE TABLE address (cep integer primary key not null, clientId integer, rua text, bairro text, cidade text, estado text, pais text);";
-      database.run(createTableUser);
-      // console.log(database.exec('SELECT * FROM clients'));
+  CREATE TABLE addresses (cep integer primary key not null, clientId integer, rua text, bairro text, cidade text, estado text, pais text, principal integer); \
+  INSERT INTO users VALUES (null, 'admin', 'password'); \
+  INSERT INTO clients VALUES (0, 'Fulano de tal', 00000000000, '1990-01-01', 2199990000, 4898881234, '0'); \
+  INSERT INTO addresses VALUES (11111000, 0, 'Rua das Alfaces, 10', 'Centro', 'Florespólis', 'SC', 'Brasil', 1); \
+  INSERT INTO addresses VALUES (22222111, 0, 'Rua dos Mariscos, 999', 'Litoral', 'Litorópolis', 'SC', 'Brasil', 0); \
+";
+      try {
+        database.run(createTableUser);
+        return console.log(database.exec('SELECT * FROM users'));
+      } catch (err) {
+        return alert('Erro na conexão com o banco de dados');
+      }
     }
     start();
-
-    async function newUser(payload) {
-      let database = await db;
-      const checkUser = database.exec(`SELECT * FROM users WHERE name = ?`, [payload.name]);
-      if (checkUser.length > 0) return alert('Usuário já existe!');
-      const totalUsers = database.exec('SELECT COUNT(*) FROM users');
-      database.run(`INSERT INTO users VALUES (?,?,?)`, [totalUsers[0].values[0][0], payload.name, payload.password]);
-      return alert('Usuário criado!');
-    }
-
-    async function loginUser(payload) {
-      let database = await db;
-      const checkUser = database.exec(`SELECT * FROM users WHERE name = ? AND pass = ?`, [payload.name, payload.password]);
-      if (checkUser.length > 0) return alert('Bem vindo!');
-      return alert('Dados inválidos!');
-    }
-
-    async function newClient(payload) {
-      let database = await db;
-      const checkCpf = database.exec(`SELECT * FROM clients WHERE cpf = ?`, [payload.cpf]);
-      if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
-      const totalClients = database.exec('SELECT COUNT(*) FROM clients');
-      database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', [totalClients[0].values[0][0], payload.name, payload.cpf, payload.date, payload.fone, payload.cel, '1']);
-      return alert('Cliente cadastrado!');
-    }
-
-    async function exportDb() {
-      let database = await db;
-      // Exportando mas não fazendo download!
-      database.export();
-    }
 
   </script>
 </head>
@@ -221,6 +197,7 @@
     const name = document.querySelector("input#login").value;
     const password = document.querySelector("input#password").value;
     await loginUser({ name: name, password: password });
+    document.querySelector("input#password").value = '';
   });
 
   document.getElementById("clearLoginForm").addEventListener("click", (e) => {
@@ -258,6 +235,47 @@
     e.preventDefault();
     exportDb();
   })
+
+  document.querySelector("#cadastro.btn").setAttribute("disabled", true);
+
+  async function loginUser(payload) {
+    let database = await db;
+    const checkUser = database.exec(`SELECT * FROM users WHERE name = ? AND pass = ?`, [payload.name, payload.password]);
+    if (checkUser.length > 0) {
+      console.log(document.querySelector("#cadastro.btn"));
+      document.querySelector("#cadastro.btn").disabled = false;
+      return alert('Sistema de cadastro liberado');
+    }
+    return alert('Verifique seu login/senha');
+  }
+
+  async function newUser(payload) {
+    try {
+      let database = await db;
+      const checkUser = database.exec(`SELECT * FROM users WHERE name = ?`, [payload.name]);
+      if (checkUser.length > 0) return alert('Usuário já existe. Verifique sua senha.');
+      database.run(`INSERT INTO users VALUES (?,?,?)`, [null, payload.name, payload.password]);
+      document.querySelector("input#login").value = '';
+      document.querySelector("input#password").value = '';
+      return alert('Usuário criado! Faça login com os dados informados!');
+    } catch (err) {
+      alert(err);
+    }
+  }
+
+  async function newClient(payload) {
+    let database = await db;
+    const checkCpf = database.exec(`SELECT * FROM clients WHERE cpf = ?`, [payload.cpf]);
+    if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
+    database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', [null, payload.name, payload.cpf, payload.date, payload.fone, payload.cel, '1']);
+    return alert('Cliente cadastrado!');
+  }
+
+  async function exportDb() {
+    let database = await db;
+    // Exportando mas não fazendo download!
+    database.export();
+  }
 
 </script>
 
