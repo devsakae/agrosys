@@ -52,17 +52,18 @@
     }
 
     async function newClient(payload) {
-      console.log(payload);
       let database = await db;
       const checkCpf = database.exec(`SELECT * FROM clients WHERE cpf = ?`, [payload.cpf]);
       if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
       const totalClients = database.exec('SELECT COUNT(*) FROM clients');
-      console.log('Aqui vem')
-      // database.run(`INSERT INTO clients VALUES (2, 'Outro teste', 121212121, '1980-01-01', 2199990000, 4898881234, '0')`);
-      // console.log([totalClients[0].values[0][0], payload.name, payload.cpf, payload.data, payload.tel, payload.cel, '1']);
       database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', [totalClients[0].values[0][0], payload.name, payload.cpf, payload.date, payload.fone, payload.cel, '1']);
-      console.log('Aqui não vem')
       return alert('Cliente cadastrado!');
+    }
+
+    async function exportDb() {
+      let database = await db;
+      // Exportando mas não fazendo download!
+      database.export();
     }
 
   </script>
@@ -137,6 +138,41 @@
               <input id="client_cel" type="number" class="form-control" placeholder="Somente números" />
             </div>
           </div>
+          <div class="text-left mb-3">
+            <h4>Endereços</h4>
+          </div>
+          <div class="text-left mb-3">
+            <label for='ad_rua'>Rua</label>
+            <input id="ad_rua" type="text" class="form-control" placeholder="Rua e número" />
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for='ad_bairro'>Bairro</label>
+              <input id="ad_bairro" type="text" class="form-control" />
+            </div>
+            <div class="col">
+              <label for='ad_cep'>CEP</label>
+              <input id="ad_cep" type="number" class="form-control" placeholder="Somente números" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for='ad_cidade'>Cidade</label>
+              <input id="ad_cidade" type="text" class="form-control" />
+            </div>
+            <div class="col">
+              <label for='ad_estado'>Estado</label>
+              <input id="ad_estado" type="text" class="form-control" />
+            </div>
+            <div class="col">
+              <label for='ad_pais'>País</label>
+              <input id="ad_pais" type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+            <label class="form-check-label" for="flexSwitchCheckChecked">Este é o endereço principal do cliente</label>
+          </div>
           <div class='mt-4'>
             <button id="handleClientData" class="btn btn-primary">Salvar</button>
             <button id="clearClientForm" class="btn btn-danger">Limpar</button>
@@ -155,6 +191,9 @@
       </button>
       <button id="cadastro" class="btn btn-primary m-2" onclick="toggleOption('#cadastro')">
         Sistema de cadastro
+      </button>
+      <button id="export_db" class="btn btn-danger m-2">
+        Exportar DB
       </button>
     </section>
   </main>
@@ -200,6 +239,25 @@
     if (name && cpf) await newClient({ name, cpf, date, fone, cel });
   });
 
+  document.getElementById("clearClientForm").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelector("input#client_name").value = '';
+    document.querySelector("input#client_cpf").value = '';
+    document.querySelector("input#client_date").value = '';
+    document.querySelector("input#client_fone").value = '';
+    document.querySelector("input#client_cel").value = '';
+    document.querySelector("input#ad_cep").value = '';
+    document.querySelector("input#ad_rua").value = '';
+    document.querySelector("input#ad_bairro").value = '';
+    document.querySelector("input#ad_cidade").value = '';
+    document.querySelector("input#ad_estado").value = '';
+    document.querySelector("input#ad_pais").value = '';
+  });
+
+  document.getElementById("export_db").addEventListener("click", (e) => {
+    e.preventDefault();
+    exportDb();
+  })
 
 </script>
 
