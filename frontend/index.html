@@ -18,9 +18,18 @@
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
   <script>
-    const db = window.initSqlJs({
+    let db = window.initSqlJs({
       locateFile: (file) => `https://sql.js.org/dist/${file}`
     }).then((SQL) => new SQL.Database());
+
+    function restoreDb(backupfile) {
+      console.log('RESTORE DB');
+      const arrayInt = new Uint8Array(backupfile.arrayBuffer());
+      console.log(arrayInt);
+      db = window.initSqlJs({
+        locateFile: (file) => `https://sql.js.org/dist/${file}`
+      }).then((SQL) => new SQL.Database(arrayInt));
+    }
 
     async function start() {
       let database = await db;
@@ -35,7 +44,7 @@
 ";
       try {
         database.run(createTableUser);
-        return console.log(database.exec('SELECT * FROM users'));
+        return;
       } catch (err) {
         return alert('Erro na conexão com o banco de dados');
       }
@@ -155,28 +164,58 @@
           </div>
         </form>
       </div>
+
+      <!-- Import/export db -->
+      <div id="configs" class="optionDisplay">
+        <h2>Configurações do banco de dados</h2>
+        <div class="row">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Importar</h5>
+              <p class="card-text">Envie um BD</p>
+              <input id='importer' class="form-control mb-3" type='file' accept='.wal, .sqlite' required />
+              <button id='importer_btn' class='btn btn-primary'>Upload</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Exportar</h5>
+              <p class="card-text">Salve o BD</p>
+              <div id='exporter_row'>
+                <button id='exporter_btn' class='btn btn-primary'>Download</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </section>
 
     <!-- Menu de opções -->
-    <section id="options" class="options">
+    <section id="options_btn" class="options">
+      <button id="teste" class="btn btn-primary m-2">
+        Teste
+      </button>
       <button id="info" class="btn btn-warning m-2" onclick="toggleOption('#infotxt')">
         info.txt
       </button>
-      <button id="login" class="btn btn-primary m-2" onclick="toggleOption('#login')">
+      <button id="login_btn" class="btn btn-primary m-2" onclick="toggleOption('#login')">
         Login/Novo usuário
       </button>
-      <button id="cadastro" class="btn btn-primary m-2" onclick="toggleOption('#cadastro')">
+      <button id="cadastro_btn" class="btn btn-primary m-2" onclick="toggleOption('#cadastro')">
         Sistema de cadastro
       </button>
-      <button id="export_db" class="btn btn-danger m-2">
-        Exportar DB
+      <button id="configs_btn" class='btn btn-danger m-2' onclick="toggleOption('#configs')">
+        Configurações
       </button>
     </section>
+
   </main>
 </body>
 <script>
   const toggleOption = (id) => {
-    let optionsIds = ['#capa', '#infotxt', '#login', '#cadastro'];
+    let optionsIds = ['#capa', '#infotxt', '#login', '#cadastro', '#configs'];
     let toRemove = optionsIds.indexOf(id);
     optionsIds.splice(toRemove, 1);
     optionsIds.forEach(
@@ -184,6 +223,11 @@
     );
     document.querySelector(id).style.display = 'flex';
   };
+
+  document.getElementById("teste").addEventListener("click", async (e) => {
+    const database = await db;
+    console.log(database.exec('SELECT * FROM users'));
+  })
 
   document.getElementById("handleUserRegister").addEventListener("click", async (e) => {
     e.preventDefault();
@@ -231,19 +275,35 @@
     document.querySelector("input#ad_pais").value = '';
   });
 
-  document.getElementById("export_db").addEventListener("click", (e) => {
+  document.getElementById("exporter_btn").addEventListener("click", async (e) => {
     e.preventDefault();
-    exportDb();
+    const database = await db;
+    console.log(database);
+    const dbExportada = database.export();
+    console.log(dbExportada);
+    const blob = new Blob([dbExportada], { type: 'text/txt' });
+    console.log(blob);
+    const url = window.URL.createObjectURL(blob);
+    console.log(url);
+    const downloadLink = document.createElement('a');
+    downloadLink.setAttribute('href', url)
+    downloadLink.setAttribute('download', 'backup.sqlite')
+    downloadLink.click();
   })
 
-  document.querySelector("#cadastro.btn").setAttribute("disabled", true);
+  document.querySelector('#importer_btn').addEventListener("click", (e) => {
+    e.preventDefault();
+    const arquivo = document.querySelector('#importer').files[0];
+    restoreDb(arquivo);
+  })
+
+  document.querySelector("#cadastro_btn").setAttribute("disabled", true);
 
   async function loginUser(payload) {
     let database = await db;
     const checkUser = database.exec(`SELECT * FROM users WHERE name = ? AND pass = ?`, [payload.name, payload.password]);
     if (checkUser.length > 0) {
-      console.log(document.querySelector("#cadastro.btn"));
-      document.querySelector("#cadastro.btn").disabled = false;
+      document.querySelector("#cadastro_btn").disabled = false;
       return alert('Sistema de cadastro liberado');
     }
     return alert('Verifique seu login/senha');
@@ -269,12 +329,6 @@
     if (checkCpf.length > 0) return alert('CPF já cadastrado no banco de dados');
     database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', [null, payload.name, payload.cpf, payload.date, payload.fone, payload.cel, '1']);
     return alert('Cliente cadastrado!');
-  }
-
-  async function exportDb() {
-    let database = await db;
-    // Exportando mas não fazendo download!
-    database.export();
   }
 
 </script>
