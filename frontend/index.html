@@ -177,9 +177,6 @@
             <button id="handleClientData" class="btn btn-primary">
               Salvar
             </button>
-            <button id="addNewAddress" class="btn btn-primary">
-              Salvar e cadastrar outro
-            </button>
             <button id="clearClientForm" class="btn btn-danger">
               Limpar
             </button>
@@ -286,51 +283,12 @@
     });
 
   document
-    .getElementById('addNewAddress')
-    .addEventListener('click', async (e) => {
-      e.preventDefault();
-      const name = document.querySelector('input#client_name').value;
-      const cpf = Number(document.querySelector('input#client_cpf').value);
-      const payload = {
-        cpf: Number(document.querySelector('input#client_cpf').value),
-        rua: document.querySelector('input#ad_rua').value,
-        cep: document.querySelector('input#ad_cep').value,
-        bairro: document.querySelector('input#ad_bairro').value,
-        cidade: document.querySelector('input#ad_cidade').value,
-        estado: document.querySelector('input#ad_estado').value,
-        pais: document.querySelector('input#ad_pais').value
-      }
-      await saveNewAddress(payload);
-    })
-
-  document
     .getElementById('clearClientForm')
     .addEventListener('click', (e) => {
       e.preventDefault();
       clearClientForm();
     });
 
-  async function getClientByCpf(cpf) {
-    let database = await db;
-    try {
-      const response = db.exec('SELECT id FROM clients WHERE cpf = ?', [cpf]);
-      console.log(response);
-      return response;
-    } catch (err) {
-      return alert(err);
-    }
-  }
-
-  async function saveNewAddress(payload) {
-    let database = await db;
-    try {
-      const getClient = await getClientByCpf(payload.cpf)
-      // db.exec('INSERT INTO addresses WHERE id = ?', [])
-      return alert('Endereço cadastrado com sucesso!')
-    } catch (err) {
-      return alert(err);
-    }
-  }
 
   function clearClientForm() {
     document.querySelector('input#client_name').value = '';
@@ -385,23 +343,6 @@
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }
 
-  const addClient = (client) => {
-    const clientList = document.querySelector('#clientList');
-    const clientLi = document.createElement('a');
-    clientLi.classList.add(
-      'list-group-item',
-      'list-group-item-action',
-      'd-flex',
-      'justify-content-between',
-      'align-items-center',
-    );
-    const clientAdNum = document.createElement('span');
-    clientAdNum.innerText = '(CPF ' + formataCPF(client[2]) + ')';
-    clientLi.innerText = client[1];
-    clientLi.append(clientAdNum);
-    clientList.append(clientLi);
-  };
-
   const appendNewClient = (client) => {
     const clients_list = document.querySelector('#clients_list');
     const clients_list_item = document.createElement('div');
@@ -449,9 +390,8 @@
           <input type="number" id="${client[0]}_cel" value="${client[5]}" class="form-control" />
         </div>
       </div>
-      <button id="${client[0]}_change" class="btn btn-primary">Confirmar alteração</button>
+      <button id="${client[0]}_change" class="btn btn-primary">Salvar alterações</button>
     </form>`;
-    // [1, 'Fulano de tal', 11122233344, '1990-01-01', 2199990000, 4898881234, 11111000]
     clients_list_info_div.insertAdjacentHTML('afterbegin', cl_inputname);
     clients_list_info.append(clients_list_info_div);
     clients_list_item.append(clients_list_info);
@@ -486,7 +426,7 @@
   };
   getClients();
 
-  document.querySelector('#cadastro_btn').setAttribute('disabled', true);
+  // document.querySelector('#cadastro_btn').setAttribute('disabled', true);
 
   async function loginUser(payload) {
     let database = await db;
@@ -538,12 +478,10 @@
       payload.cel,
       principal,
     ];
-    const clientAdded = await database.exec(
-      'INSERT INTO clients VALUES (?,?,?,?,?,?,?)',
-      clientInfo,
-    );
+    await database.run('INSERT INTO clients VALUES (?,?,?,?,?,?,?)', clientInfo);
+    const savedClient = await database.exec('SELECT * FROM clients WHERE cpf = ?', [payload.cpf]);
     clearClientForm();
-    addClient(clientInfo);
+    appendNewClient(savedClient[0].values[0])
     return alert('Cliente cadastrado!');
   }
 </script>
