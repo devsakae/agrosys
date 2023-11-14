@@ -1,39 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="./src/css/styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <title>Processo seletivo - Agrosys</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    <script>
-      let db = window
-        .initSqlJs({
-          locateFile: (file) => `https://sql.js.org/dist/${file}`,
-        })
-        .then((SQL) => new SQL.Database());
 
-      async function start() {
-        let database = await db;
-        const createTableUser =
-          "CREATE TABLE users (id integer primary key, name text, pass text); \
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="./src/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <title>Processo seletivo - Agrosys</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+  <script>
+    let db = window
+      .initSqlJs({
+        locateFile: (file) => `https://sql.js.org/dist/${file}`,
+      })
+      .then((SQL) => new SQL.Database());
+
+    async function start() {
+      let database = await db;
+      const createTableUser =
+        "CREATE TABLE users (id integer primary key, name text, pass text); \
       CREATE TABLE clients (id integer primary key, name text, cpf integer, data date, tel integer, cel integer, principal integer); \
       CREATE TABLE addresses (cep integer primary key not null, clientId integer, rua text, bairro text, cidade text, estado text, pais text); \
       INSERT INTO users VALUES (null, 'admin', 'password'); \
@@ -42,532 +36,516 @@
       INSERT INTO addresses VALUES (11111000, 0, 'Rua das Alfaces, 10', 'Centro', 'Florespólis', 'SC', 'Brasil'); \
       INSERT INTO addresses VALUES (22222111, 1, 'Rua dos Mariscos, 999', 'Litoral', 'Litorópolis', 'SC', 'Brasil'); \
       ";
-        try {
-          database.run(createTableUser);
-          return;
-        } catch (err) {
-          return alert('Erro na conexão com o banco de dados');
-        }
+      try {
+        database.run(createTableUser);
+        return;
+      } catch (err) {
+        return alert('Erro na conexão com o banco de dados');
       }
-      start();
-    </script>
-  </head>
+    }
+    start();
+  </script>
+</head>
 
-  <body>
-    <main class="main container-fluid">
-      <section class="exhibit">
-        <!-- Welcome -->
-        <div id="capa">
-          <div class="limitador">
-            <h1>Avaliação técnica Agrosys</h1>
-            <legend>Projeto CRUD Web</legend>
+<body>
+  <main class="main container-fluid">
+    <section class="exhibit">
+      <!-- Welcome -->
+      <div id="capa">
+        <div class="limitador">
+          <h1>Avaliação técnica Agrosys</h1>
+          <legend>Projeto CRUD Web</legend>
+        </div>
+      </div>
+
+      <!-- Instruções -->
+      <div id="infotxt" class="optionDisplay">
+        <object data="./INFO.txt" type="text/plain" width="500" style="height: 300px">
+          <a href="./INFO.txt">Download</a>
+        </object>
+      </div>
+
+      <!-- Sistema de login -->
+      <div id="login" class="optionDisplay">
+        <h2>Acesso ao sistema</h2>
+        <form id="formLogin" class="container">
+          <div class="text-left mb-3">
+            <input id="login" type="text" class="form-control" placeholder="Usuário" aria-describedby="defaultUser"
+              required />
+            <div id="defaultUser" class="form-text">
+              Teste com o username <strong>admin</strong>
+            </div>
           </div>
-        </div>
+          <div class="text-left mb-3">
+            <input id="password" type="password" class="form-control" placeholder="Senha" aria-describedby="defaultPass"
+              required />
+            <div id="defaultPass" class="form-text">
+              Teste com a senha <strong>password</strong>
+            </div>
+          </div>
+          <div>
+            <button id="handleUserLogin" class="btn btn-primary">
+              Fazer login
+            </button>
+            <button id="clearLoginForm" class="btn btn-secondary">
+              Limpar
+            </button>
+            <button id="handleUserRegister" class="btn btn-danger">
+              Novo usuário
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <!-- Instruções -->
-        <div id="infotxt" class="optionDisplay">
-          <object
-            data="./INFO.txt"
-            type="text/plain"
-            width="500"
-            style="height: 300px"
-          >
-            <a href="./INFO.txt">Download</a>
-          </object>
-        </div>
+      <!-- Sistema gerenciador de clientes -->
+      <div id="cadastro" class="optionDisplay">
+        <h2>Sistema gerenciador de clientes</h2>
 
-        <!-- Sistema de login -->
-        <div id="login" class="optionDisplay">
-          <h2>Acesso ao sistema</h2>
-          <form id="formLogin" class="container">
-            <div class="text-left mb-3">
-              <input
-                id="login"
-                type="text"
-                class="form-control"
-                placeholder="Usuário"
-                aria-describedby="defaultUser"
-                required
-              />
-              <div id="defaultUser" class="form-text">
-                Teste com o username <strong>admin</strong>
-              </div>
-            </div>
-            <div class="text-left mb-3">
-              <input
-                id="password"
-                type="password"
-                class="form-control"
-                placeholder="Senha"
-                aria-describedby="defaultPass"
-                required
-              />
-              <div id="defaultPass" class="form-text">
-                Teste com a senha <strong>password</strong>
-              </div>
-            </div>
-            <div>
-              <button id="handleUserLogin" class="btn btn-primary">
-                Fazer login
-              </button>
-              <button id="clearLoginForm" class="btn btn-secondary">
-                Limpar
-              </button>
-              <button id="handleUserRegister" class="btn btn-danger">
-                Novo usuário
-              </button>
-            </div>
-          </form>
+        <!-- <div id="clientList" class="list-group container"></div> -->
+        <div id='client_list_parent' class='container'>
+          <div id='clients_list' class="accordion"></div>
         </div>
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#formClient" role="button" aria-expanded="false"
+          aria-controls="formClient">
+          Cadastrar novo cliente
+        </a>
+        <form id="formClient" class="container collapse">
+          <div class="text-left mb-3">
+            <label for="client_name">Nome completo</label>
+            <input id="client_name" type="text" class="form-control" required />
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="client_cpf">CPF</label>
+              <input id="client_cpf" type="number" class="form-control"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder="Somente números" maxlength='11' required />
+            </div>
+            <div class="col">
+              <label for="client_date">Data de nascimento</label>
+              <input id="client_date" type="date" class="form-control" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="client_fone">Telefone principal</label>
+              <input id="client_fone" type="number" class="form-control" placeholder="Somente números" />
+            </div>
+            <div class="col">
+              <label for="client_cel">Telefone celular</label>
+              <input id="client_cel" type="number" class="form-control" placeholder="Somente números" />
+            </div>
+          </div>
+          <div class="text-left mb-3">
+            <h4>Endereços</h4>
+          </div>
+          <div class="text-left mb-3">
+            <label for="ad_rua">Rua</label>
+            <input id="ad_rua" type="text" class="form-control" placeholder="Rua e número" />
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="ad_bairro">Bairro</label>
+              <input id="ad_bairro" type="text" class="form-control" />
+            </div>
+            <div class="col">
+              <label for="ad_cep">CEP</label>
+              <input id="ad_cep" type="number" class="form-control" placeholder="Somente números" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="ad_cidade">Cidade</label>
+              <input id="ad_cidade" type="text" class="form-control" />
+            </div>
+            <div class="col">
+              <label for="ad_estado">Estado</label>
+              <input id="ad_estado" type="text" class="form-control" />
+            </div>
+            <div class="col">
+              <label for="ad_pais">País</label>
+              <input id="ad_pais" type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="ad_principal" checked />
+            <label class="form-check-label" for="flexSwitchCheckChecked">
+              Este é o endereço principal do cliente
+            </label>
+          </div>
+          <div class="mt-4">
+            <button id="handleClientData" class="btn btn-primary">
+              Salvar
+            </button>
+            <button id="addNewAddress" class="btn btn-primary">
+              Salvar e cadastrar outro
+            </button>
+            <button id="clearClientForm" class="btn btn-danger">
+              Limpar
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <!-- Sistema gerenciador de clientes -->
-        <div id="cadastro" class="optionDisplay">
-          <h2>Sistema gerenciador de clientes</h2>
-          <!-- <a class="btn btn-primary" data-bs-toggle="collapse" href="#clientList" role="button" aria-expanded="false" aria-controls="clientList">
-            Ver clientes cadastrados
-          </a> -->
-          <div id="clientList" class="list-group container"></div>
-          <a
-            class="btn btn-primary"
-            data-bs-toggle="collapse"
-            href="#formClient"
-            role="button"
-            aria-expanded="false"
-            aria-controls="formClient"
-          >
-            Cadastrar novo cliente
-          </a>
-          <form id="formClient" class="container collapse">
-            <div class="text-left mb-3">
-              <label for="client_name">Nome completo</label>
-              <input
-                id="client_name"
-                type="text"
-                class="form-control"
-                required
-              />
-            </div>
-            <div class="row mb-3">
-              <div class="col">
-                <label for="client_cpf">CPF</label>
-                <input
-                  id="client_cpf"
-                  type="number"
-                  class="form-control"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  placeholder="Somente números"
-                  maxlength='11'
-                  required
-                />
-              </div>
-              <div class="col">
-                <label for="client_date">Data de nascimento</label>
-                <input id="client_date" type="date" class="form-control" />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col">
-                <label for="client_fone">Telefone principal</label>
-                <input
-                  id="client_fone"
-                  type="number"
-                  class="form-control"
-                  placeholder="Somente números"
-                />
-              </div>
-              <div class="col">
-                <label for="client_cel">Telefone celular</label>
-                <input
-                  id="client_cel"
-                  type="number"
-                  class="form-control"
-                  placeholder="Somente números"
-                />
-              </div>
-            </div>
-            <div class="text-left mb-3">
-              <h4>Endereços</h4>
-            </div>
-            <div class="text-left mb-3">
-              <label for="ad_rua">Rua</label>
-              <input
-                id="ad_rua"
-                type="text"
-                class="form-control"
-                placeholder="Rua e número"
-              />
-            </div>
-            <div class="row mb-3">
-              <div class="col">
-                <label for="ad_bairro">Bairro</label>
-                <input id="ad_bairro" type="text" class="form-control" />
-              </div>
-              <div class="col">
-                <label for="ad_cep">CEP</label>
-                <input
-                  id="ad_cep"
-                  type="number"
-                  class="form-control"
-                  placeholder="Somente números"
-                />
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col">
-                <label for="ad_cidade">Cidade</label>
-                <input id="ad_cidade" type="text" class="form-control" />
-              </div>
-              <div class="col">
-                <label for="ad_estado">Estado</label>
-                <input id="ad_estado" type="text" class="form-control" />
-              </div>
-              <div class="col">
-                <label for="ad_pais">País</label>
-                <input id="ad_pais" type="text" class="form-control" />
-              </div>
-            </div>
-            <div class="form-check form-switch mb-3">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="ad_principal"
-                checked
-              />
-              <label class="form-check-label" for="flexSwitchCheckChecked">
-                Este é o endereço principal do cliente
-              </label>
-            </div>
-            <div class="mt-4">
-              <button id="handleClientData" class="btn btn-primary">
-                Salvar
-              </button>
-              <button id="addNewAddress" class="btn btn-primary">
-                Salvar e cadastrar outro
-              </button>
-              <button id="clearClientForm" class="btn btn-danger">
-                Limpar
+      <!-- Import/export db -->
+      <div id="configs" class="optionDisplay">
+        <h2>Configurações do banco de dados</h2>
+        <div class="row">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Importar</h5>
+              <p class="card-text">Envie um BD</p>
+              <input id="importer" class="form-control mb-3" type="file" accept=".wal, .sqlite, .db" required />
+              <button id="importer_btn" class="btn btn-primary">
+                Upload
               </button>
             </div>
-          </form>
-        </div>
-
-        <!-- Import/export db -->
-        <div id="configs" class="optionDisplay">
-          <h2>Configurações do banco de dados</h2>
-          <div class="row">
-            <div class="card mb-3">
-              <div class="card-body">
-                <h5 class="card-title">Importar</h5>
-                <p class="card-text">Envie um BD</p>
-                <input
-                  id="importer"
-                  class="form-control mb-3"
-                  type="file"
-                  accept=".wal, .sqlite, .db"
-                  required
-                />
-                <button id="importer_btn" class="btn btn-primary">
-                  Upload
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Exportar</h5>
+              <p class="card-text">Salve o BD</p>
+              <div id="exporter_row">
+                <button id="exporter_btn" class="btn btn-primary">
+                  Download
                 </button>
               </div>
             </div>
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Exportar</h5>
-                <p class="card-text">Salve o BD</p>
-                <div id="exporter_row">
-                  <button id="exporter_btn" class="btn btn-primary">
-                    Download
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Menu de opções -->
-      <section id="options_btn" class="options">
-        <button
-          id="info"
-          class="btn btn-warning m-2"
-          onclick="toggleOption('#infotxt')"
-        >
-          info.txt
-        </button>
-        <button
-          id="login_btn"
-          class="btn btn-primary m-2"
-          onclick="toggleOption('#login')"
-        >
-          Login
-        </button>
-        <button
-          id="cadastro_btn"
-          class="btn btn-primary m-2"
-          onclick="toggleOption('#cadastro')"
-        >
-          Sistema
-        </button>
-        <button
-          id="configs_btn"
-          class="btn btn-danger m-2"
-          onclick="toggleOption('#configs')"
-        >
-          Configurações
-        </button>
-      </section>
-    </main>
-  </body>
-  <script>
-    const toggleOption = (id) => {
-      let optionsIds = ['#capa', '#infotxt', '#login', '#cadastro', '#configs'];
-      let toRemove = optionsIds.indexOf(id);
-      optionsIds.splice(toRemove, 1);
-      optionsIds.forEach(
-        (i) => (document.querySelector(i).style.display = 'none'),
-      );
-      document.querySelector(id).style.display = 'flex';
-    };
+    <!-- Menu de opções -->
+    <section id="options_btn" class="options">
+      <button id="info" class="btn btn-warning m-2" onclick="toggleOption('#infotxt')">
+        info.txt
+      </button>
+      <button id="login_btn" class="btn btn-primary m-2" onclick="toggleOption('#login')">
+        Login
+      </button>
+      <button id="cadastro_btn" class="btn btn-primary m-2" onclick="toggleOption('#cadastro')">
+        Sistema
+      </button>
+      <button id="configs_btn" class="btn btn-danger m-2" onclick="toggleOption('#configs')">
+        Configurações
+      </button>
+    </section>
+  </main>
+</body>
+<script>
+  const toggleOption = (id) => {
+    let optionsIds = ['#capa', '#infotxt', '#login', '#cadastro', '#configs'];
+    let toRemove = optionsIds.indexOf(id);
+    optionsIds.splice(toRemove, 1);
+    optionsIds.forEach(
+      (i) => (document.querySelector(i).style.display = 'none'),
+    );
+    document.querySelector(id).style.display = 'flex';
+  };
 
-    document
-      .getElementById('handleUserRegister')
-      .addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = document.querySelector('input#login').value;
-        const password = document.querySelector('input#password').value;
-        if (name && password)
-          return await newUser({ name: name, password: password });
-        return alert('Digite o usuário e senha!');
-      });
-
-    document
-      .getElementById('handleUserLogin')
-      .addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = document.querySelector('input#login').value;
-        const password = document.querySelector('input#password').value;
-        await loginUser({ name: name, password: password });
-        document.querySelector('input#password').value = '';
-      });
-
-    document.getElementById('clearLoginForm').addEventListener('click', (e) => {
+  document
+    .getElementById('handleUserRegister')
+    .addEventListener('click', async (e) => {
       e.preventDefault();
-      document.querySelector('input#login').value = '';
+      const name = document.querySelector('input#login').value;
+      const password = document.querySelector('input#password').value;
+      if (name && password)
+        return await newUser({ name: name, password: password });
+      return alert('Digite o usuário e senha!');
+    });
+
+  document
+    .getElementById('handleUserLogin')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
+      const name = document.querySelector('input#login').value;
+      const password = document.querySelector('input#password').value;
+      await loginUser({ name: name, password: password });
       document.querySelector('input#password').value = '';
     });
 
-    document
-      .getElementById('handleClientData')
-      .addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = document.querySelector('input#client_name').value;
-        const cpf = Number(document.querySelector('input#client_cpf').value);
-        const date = document.querySelector('input#client_date').value;
-        const fone = Number(document.querySelector('input#client_fone').value);
-        const cel = Number(document.querySelector('input#client_cel').value);
-        const cep = Number(document.querySelector('input#ad_cep').value);
-        if (!cpf) return alert('Digite o CPF do cliente');
-        return await newClient({ name, cpf, date, fone, cel, cep });
-      });
+  document.getElementById('clearLoginForm').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('input#login').value = '';
+    document.querySelector('input#password').value = '';
+  });
 
-    document
-      .getElementById('addNewAddress')
-      .addEventListener('click', async (e) => {
-        e.preventDefault();
-        const name = document.querySelector('input#client_name').value;
-        const cpf = Number(document.querySelector('input#client_cpf').value);
-        const payload = {
-          cpf: Number(document.querySelector('input#client_cpf').value),
-          rua: document.querySelector('input#ad_rua').value,
-          cep: document.querySelector('input#ad_cep').value,
-          bairro: document.querySelector('input#ad_bairro').value,
-          cidade: document.querySelector('input#ad_cidade').value,
-          estado: document.querySelector('input#ad_estado').value,
-          pais: document.querySelector('input#ad_pais').value
-        }
-        await saveNewAddress(payload);
-      })
-
-    document
-      .getElementById('clearClientForm')
-      .addEventListener('click', (e) => {
-        e.preventDefault();
-        clearClientForm();
-      });
-
-    async function getClientByCpf(cpf) {
-      let database = await db;
-      try {
-        const response = db.exec('SELECT id FROM clients WHERE cpf = ?', [cpf]);
-        console.log(response);
-        return response;
-      } catch (err) {
-        return alert(err);
-      }
-    }
-
-    async function saveNewAddress(payload) {
-      let database = await db;
-      try {
-        const getClient = await getClientByCpf(payload.cpf)
-        // db.exec('INSERT INTO addresses WHERE id = ?', [])
-        return alert('Endereço cadastrado com sucesso!')
-      } catch (err) {
-        return alert(err);
-      }
-    }
-
-    function clearClientForm() {
-      document.querySelector('input#client_name').value = '';
-      document.querySelector('input#client_cpf').value = '';
-      document.querySelector('input#client_date').value = '';
-      document.querySelector('input#client_fone').value = '';
-      document.querySelector('input#client_cel').value = '';
-      document.querySelector('input#ad_cep').value = '';
-      document.querySelector('input#ad_rua').value = '';
-      document.querySelector('input#ad_bairro').value = '';
-      document.querySelector('input#ad_cidade').value = '';
-      document.querySelector('input#ad_estado').value = '';
-      document.querySelector('input#ad_pais').value = '';
-    }
-
-    document
-      .getElementById('exporter_btn')
-      .addEventListener('click', async (e) => {
-        e.preventDefault();
-        const database = await db;
-        const dbExportada = database.export();
-        const blob = new Blob([dbExportada], { type: 'text/txt' });
-        const url = window.URL.createObjectURL(blob);
-        const downloadLink = document.createElement('a');
-        downloadLink.setAttribute('href', url);
-        downloadLink.setAttribute('download', 'backup.sqlite');
-        downloadLink.click();
-      });
-
-    document.getElementById('importer_btn').addEventListener('click', (e) => {
+  document
+    .getElementById('handleClientData')
+    .addEventListener('click', async (e) => {
       e.preventDefault();
-      const file = document.querySelector('#importer').files[0];
-      const r = new FileReader();
-      r.onload = function () {
-        const Uints = new Uint8Array(r.result);
-        db = window
-          .initSqlJs({
-            locateFile: (file) => `https://sql.js.org/dist/${file}`,
-          })
-          .then((SQL) => new SQL.Database(Uints))
-          .finally(() => {
-            getClients();
-            return alert('Database importada');
-          });
-      };
-      r.readAsArrayBuffer(file);
+      const name = document.querySelector('input#client_name').value;
+      const cpf = Number(document.querySelector('input#client_cpf').value);
+      const date = document.querySelector('input#client_date').value;
+      const fone = Number(document.querySelector('input#client_fone').value);
+      const cel = Number(document.querySelector('input#client_cel').value);
+      const cep = Number(document.querySelector('input#ad_cep').value);
+      if (!cpf) return alert('Digite o CPF do cliente');
+      return await newClient({ name, cpf, date, fone, cel, cep });
     });
 
-    function formataCPF(raw) {
-      let cpf = JSON.stringify(raw);
-      cpf = cpf.replace(/[^\d]/g, '');
-      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    }
+  document
+    .getElementById('addNewAddress')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
+      const name = document.querySelector('input#client_name').value;
+      const cpf = Number(document.querySelector('input#client_cpf').value);
+      const payload = {
+        cpf: Number(document.querySelector('input#client_cpf').value),
+        rua: document.querySelector('input#ad_rua').value,
+        cep: document.querySelector('input#ad_cep').value,
+        bairro: document.querySelector('input#ad_bairro').value,
+        cidade: document.querySelector('input#ad_cidade').value,
+        estado: document.querySelector('input#ad_estado').value,
+        pais: document.querySelector('input#ad_pais').value
+      }
+      await saveNewAddress(payload);
+    })
 
-    const addClient = (client) => {
-      const clientList = document.querySelector('#clientList');
-      const clientLi = document.createElement('a');
-      clientLi.classList.add(
-        'list-group-item',
-        'list-group-item-action',
-        'd-flex',
-        'justify-content-between',
-        'align-items-center',
-      );
-      const clientAdNum = document.createElement('span');
-      clientAdNum.innerText = '(CPF ' + formataCPF(client[2]) + ')';
-      clientLi.innerText = client[1];
-      clientLi.append(clientAdNum);
-      clientList.append(clientLi);
+  document
+    .getElementById('clearClientForm')
+    .addEventListener('click', (e) => {
+      e.preventDefault();
+      clearClientForm();
+    });
+
+  async function getClientByCpf(cpf) {
+    let database = await db;
+    try {
+      const response = db.exec('SELECT id FROM clients WHERE cpf = ?', [cpf]);
+      console.log(response);
+      return response;
+    } catch (err) {
+      return alert(err);
+    }
+  }
+
+  async function saveNewAddress(payload) {
+    let database = await db;
+    try {
+      const getClient = await getClientByCpf(payload.cpf)
+      // db.exec('INSERT INTO addresses WHERE id = ?', [])
+      return alert('Endereço cadastrado com sucesso!')
+    } catch (err) {
+      return alert(err);
+    }
+  }
+
+  function clearClientForm() {
+    document.querySelector('input#client_name').value = '';
+    document.querySelector('input#client_cpf').value = '';
+    document.querySelector('input#client_date').value = '';
+    document.querySelector('input#client_fone').value = '';
+    document.querySelector('input#client_cel').value = '';
+    document.querySelector('input#ad_cep').value = '';
+    document.querySelector('input#ad_rua').value = '';
+    document.querySelector('input#ad_bairro').value = '';
+    document.querySelector('input#ad_cidade').value = '';
+    document.querySelector('input#ad_estado').value = '';
+    document.querySelector('input#ad_pais').value = '';
+  }
+
+  document
+    .getElementById('exporter_btn')
+    .addEventListener('click', async (e) => {
+      e.preventDefault();
+      const database = await db;
+      const dbExportada = database.export();
+      const blob = new Blob([dbExportada], { type: 'text/txt' });
+      const url = window.URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      downloadLink.setAttribute('href', url);
+      downloadLink.setAttribute('download', 'backup.sqlite');
+      downloadLink.click();
+    });
+
+  document.getElementById('importer_btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const file = document.querySelector('#importer').files[0];
+    const r = new FileReader();
+    r.onload = function () {
+      const Uints = new Uint8Array(r.result);
+      db = window
+        .initSqlJs({
+          locateFile: (file) => `https://sql.js.org/dist/${file}`,
+        })
+        .then((SQL) => new SQL.Database(Uints))
+        .finally(() => {
+          getClients();
+          return alert('Database importada');
+        });
     };
+    r.readAsArrayBuffer(file);
+  });
 
-    const getClients = async () => {
+  function formataCPF(raw) {
+    let cpf = JSON.stringify(raw);
+    cpf = cpf.replace(/[^\d]/g, '');
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  }
+
+  const addClient = (client) => {
+    const clientList = document.querySelector('#clientList');
+    const clientLi = document.createElement('a');
+    clientLi.classList.add(
+      'list-group-item',
+      'list-group-item-action',
+      'd-flex',
+      'justify-content-between',
+      'align-items-center',
+    );
+    const clientAdNum = document.createElement('span');
+    clientAdNum.innerText = '(CPF ' + formataCPF(client[2]) + ')';
+    clientLi.innerText = client[1];
+    clientLi.append(clientAdNum);
+    clientList.append(clientLi);
+  };
+
+  const appendNewClient = (client) => {
+    const clients_list = document.querySelector('#clients_list');
+    const clients_list_item = document.createElement('div');
+    clients_list.append(clients_list_item);
+    clients_list_item.classList.add('accordion-item');
+    const clients_list_item_title = document.createElement('h2');
+    clients_list_item_title.classList.add('accordion-header');
+    const clients_list_item_btn = document.createElement('button');
+    clients_list_item_btn.classList.add('accordion-button');
+    clients_list_item_btn.setAttribute('data-bs-toggle', 'collapse');
+    clients_list_item_btn.setAttribute('data-bs-target', '#' + client[1].split(' ').join('').toLowerCase());
+    clients_list_item_btn.setAttribute('aria-expanded', false);
+    clients_list_item_btn.setAttribute('aria-control', client[1].split(' ').join('').toLowerCase());
+    clients_list_item_title.append(clients_list_item_btn);
+    clients_list_item_btn.append(client[1])
+    clients_list_item.append(clients_list_item_title);
+    const clients_list_info = document.createElement('div');
+    clients_list_info.setAttribute('id', client[1].split(' ').join('').toLowerCase());
+    clients_list_info.classList.add('accordion-collapse', 'collapse');
+    clients_list_info.setAttribute('data-bs-parent', '#clients_list');
+    const clients_list_info_div = document.createElement('div');
+    clients_list_info_div.classList.add('accordion-body');
+    const cl_inputname = `<form>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="${client[0]}_name" class="mb-2">Nome do cliente</label>
+          <input type="text" id="${client[0]}_name" value="${client[1]}" class="form-control" />
+        </div>
+        <div class="col">
+          <label for="${client[0]}_cpf" class="mb-2">Número do CPF</label>
+          <input type="text" id="${client[0]}_cpf" value="${client[2]}" class="form-control" />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="${client[0]}_dn" class="mb-2">Data de nascimento</label>
+          <input type="date" id="${client[0]}_dn" value="${client[3]}" class="form-control" />
+        </div>
+        <div class="col">
+          <label for="${client[0]}_tel" class="mb-2">Telefone fixo</label>
+          <input type="number" id="${client[0]}_tel" value="${client[4]}" class="form-control" />
+        </div>
+        <div class="col">
+          <label for="${client[0]}_cel" class="mb-2">Telefone celular</label>
+          <input type="number" id="${client[0]}_cel" value="${client[5]}" class="form-control" />
+        </div>
+      </div>
+      <button id="${client[0]}_change" class="btn btn-primary">Confirmar alteração</button>
+    </form>`;
+    // [1, 'Fulano de tal', 11122233344, '1990-01-01', 2199990000, 4898881234, 11111000]
+    clients_list_info_div.insertAdjacentHTML('afterbegin', cl_inputname);
+    clients_list_info.append(clients_list_info_div);
+    clients_list_item.append(clients_list_info);
+    document.getElementById(client[0] + '_change').addEventListener('click', async (e) => {
+      e.preventDefault();
       let database = await db;
-      const allClients = await database.exec('SELECT * FROM clients');
-      if (allClients[0].values.length > 0) {
-        const clientList = document.querySelector('#clientList');
-        const clientDiv = document.createElement('div');
-        clientDiv.classList.add('list-group');
-        const clientsOnScreen = document.querySelectorAll(
-          'a.list-group-item-action',
-        );
-        let clientsToAdd = allClients[0].values;
-        const spliced = clientsToAdd.splice(
-          clientsToAdd.length - clientsOnScreen.length + 1,
-        );
-        if (spliced.length > 0) clientsToAdd = spliced;
-        clientsToAdd.forEach((client) => addClient(client));
-      }
-    };
-    getClients();
+      const updateQuery = `UPDATE clients SET name = ?, cpf = ?, data = ?, tel = ?, cel = ? WHERE id = ?`;
+      const new_name = document.getElementById(client[0] + '_name').value;
+      const new_cpf = document.getElementById(client[0] + '_cpf').value;
+      const new_data = document.getElementById(client[0] + '_dn').value;
+      const new_tel = document.getElementById(client[0] + '_tel').value;
+      const new_cel = document.getElementById(client[0] + '_cel').value;
+      const clientData = database.exec(updateQuery, [new_name, new_cpf, new_data, new_tel, new_cel, Number(client[0])]);
+      getClients();
+    })
+  }
 
-    document.querySelector('#cadastro_btn').setAttribute('disabled', true);
-
-    async function loginUser(payload) {
-      let database = await db;
-      const checkUser = database.exec(
-        `SELECT * FROM users WHERE name = ? AND pass = ?`,
-        [payload.name, payload.password],
-      );
-      if (checkUser.length > 0) {
-        document.querySelector('#cadastro_btn').disabled = false;
-        return alert('Sistema de cadastro liberado');
-      }
-      return alert('Verifique seu login/senha');
+  const getClients = async () => {
+    const existentClients = document.getElementById('client_list_parent');
+    const clients_list = document.getElementById('clients_list');
+    clients_list.remove();
+    const newClients_list = document.createElement('div');
+    newClients_list.setAttribute('id', 'clients_list');
+    newClients_list.classList.add('accordion');
+    existentClients.append(newClients_list);
+    let database = await db;
+    const allClients = await database.exec('SELECT * FROM clients');
+    if (allClients[0].values.length > 0) {
+      let clients = allClients[0].values;
+      clients.forEach((item) => appendNewClient(item));
     }
+  };
+  getClients();
 
-    async function newUser(payload) {
-      try {
-        let database = await db;
-        const checkUser = database.exec(`SELECT * FROM users WHERE name = ?`, [
-          payload.name,
-        ]);
-        if (checkUser.length > 0)
-          return alert('Usuário já existe. Verifique sua senha.');
-        database.run(`INSERT INTO users VALUES (?,?,?)`, [
-          null,
-          payload.name,
-          payload.password,
-        ]);
-        document.querySelector('input#login').value = '';
-        document.querySelector('input#password').value = '';
-        return alert('Usuário criado! Faça login com os dados informados!');
-      } catch (err) {
-        alert(err);
-      }
+  document.querySelector('#cadastro_btn').setAttribute('disabled', true);
+
+  async function loginUser(payload) {
+    let database = await db;
+    const checkUser = database.exec(
+      `SELECT * FROM users WHERE name = ? AND pass = ?`,
+      [payload.name, payload.password],
+    );
+    if (checkUser.length > 0) {
+      document.querySelector('#cadastro_btn').disabled = false;
+      return alert('Sistema de cadastro liberado');
     }
+    return alert('Verifique seu login/senha');
+  }
 
-    async function newClient(payload) {
+  async function newUser(payload) {
+    try {
       let database = await db;
-      const checkCpf = database.exec('SELECT * FROM clients WHERE cpf = ?', [
-        payload.cpf,
+      const checkUser = database.exec(`SELECT * FROM users WHERE name = ?`, [
+        payload.name,
       ]);
-      if (checkCpf.length > 0) return alert('O CPF informado já está cadastrado no banco de dados');
-      const principal = payload.ad_principal ? payload.cep : null;
-      const clientInfo = [
+      if (checkUser.length > 0)
+        return alert('Usuário já existe. Verifique sua senha.');
+      database.run(`INSERT INTO users VALUES (?,?,?)`, [
         null,
         payload.name,
-        payload.cpf,
-        payload.date,
-        payload.fone,
-        payload.cel,
-        principal,
-      ];
-      const clientAdded = await database.exec(
-        'INSERT INTO clients VALUES (?,?,?,?,?,?,?)',
-        clientInfo,
-      );
-      clearClientForm();
-      addClient(clientInfo);
-      return alert('Cliente cadastrado!');
+        payload.password,
+      ]);
+      document.querySelector('input#login').value = '';
+      document.querySelector('input#password').value = '';
+      return alert('Usuário criado! Faça login com os dados informados!');
+    } catch (err) {
+      alert(err);
     }
-  </script>
+  }
+
+  async function newClient(payload) {
+    let database = await db;
+    const checkCpf = database.exec('SELECT * FROM clients WHERE cpf = ?', [
+      payload.cpf,
+    ]);
+    if (checkCpf.length > 0) return alert('O CPF informado já está cadastrado no banco de dados');
+    const principal = payload.ad_principal ? payload.cep : null;
+    const clientInfo = [
+      null,
+      payload.name,
+      payload.cpf,
+      payload.date,
+      payload.fone,
+      payload.cel,
+      principal,
+    ];
+    const clientAdded = await database.exec(
+      'INSERT INTO clients VALUES (?,?,?,?,?,?,?)',
+      clientInfo,
+    );
+    clearClientForm();
+    addClient(clientInfo);
+    return alert('Cliente cadastrado!');
+  }
+</script>
+
 </html>
