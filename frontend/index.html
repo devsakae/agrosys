@@ -33,8 +33,9 @@
       INSERT INTO users VALUES (null, 'admin', 'password'); \
       INSERT INTO clients VALUES (null, 'Fulano de tal', 11122233344, '1990-01-01', 2199990000, 4898881234, 11111000); \
       INSERT INTO clients VALUES (null, 'Sicrano de tal de tal', 99988877766, '2010-02-28', 1199821213, 5192839192, 22222111); \
-      INSERT INTO addresses VALUES (11111000, 0, 'Rua das Alfaces, 10', 'Centro', 'Florespólis', 'SC', 'Brasil'); \
+      INSERT INTO addresses VALUES (11111000, 1, 'Rua das Alfaces, 10', 'Centro', 'Florespólis', 'SC', 'Brasil'); \
       INSERT INTO addresses VALUES (22222111, 1, 'Rua dos Mariscos, 999', 'Litoral', 'Litorópolis', 'SC', 'Brasil'); \
+      INSERT INTO addresses VALUES (33333333, 2, 'Avenida Beiramar, 22', 'Litoral', 'Litorópolis', 'SC', 'Brasil'); \
       ";
       try {
         database.run(createTableUser);
@@ -343,7 +344,7 @@
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }
 
-  const appendNewClient = (client) => {
+  const appendNewClient = async (client) => {
     const clients_list = document.querySelector('#clients_list');
     const clients_list_item = document.createElement('div');
     clients_list.append(clients_list_item);
@@ -351,7 +352,7 @@
     const clients_list_item_title = document.createElement('h2');
     clients_list_item_title.classList.add('accordion-header');
     const clients_list_item_btn = document.createElement('button');
-    clients_list_item_btn.classList.add('accordion-button');
+    clients_list_item_btn.classList.add('accordion-button', 'collapsed');
     clients_list_item_btn.setAttribute('data-bs-toggle', 'collapse');
     clients_list_item_btn.setAttribute('data-bs-target', '#' + client[1].split(' ').join('').toLowerCase());
     clients_list_item_btn.setAttribute('aria-expanded', false);
@@ -365,36 +366,104 @@
     clients_list_info.setAttribute('data-bs-parent', '#clients_list');
     const clients_list_info_div = document.createElement('div');
     clients_list_info_div.classList.add('accordion-body');
-    const cl_inputname = `<form>
-      <div class="row mb-3">
-        <div class="col">
-          <label for="${client[0]}_name" class="mb-2">Nome do cliente</label>
-          <input type="text" id="${client[0]}_name" value="${client[1]}" class="form-control" />
-        </div>
-        <div class="col">
-          <label for="${client[0]}_cpf" class="mb-2">Número do CPF</label>
-          <input type="text" id="${client[0]}_cpf" value="${client[2]}" class="form-control" />
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col">
-          <label for="${client[0]}_dn" class="mb-2">Data de nascimento</label>
-          <input type="date" id="${client[0]}_dn" value="${client[3]}" class="form-control" />
-        </div>
-        <div class="col">
-          <label for="${client[0]}_tel" class="mb-2">Telefone fixo</label>
-          <input type="number" id="${client[0]}_tel" value="${client[4]}" class="form-control" />
-        </div>
-        <div class="col">
-          <label for="${client[0]}_cel" class="mb-2">Telefone celular</label>
-          <input type="number" id="${client[0]}_cel" value="${client[5]}" class="form-control" />
-        </div>
-      </div>
-      <button id="${client[0]}_change" class="btn btn-primary">Salvar alterações</button>
-    </form>`;
-    clients_list_info_div.insertAdjacentHTML('afterbegin', cl_inputname);
+    
+    const cl_form = document.createElement('form');
+    const cl_row_1 = document.createElement('div');
+    cl_row_1.classList.add('row', 'mb-3');
+    const cl_col_1 = document.createElement('div');
+    cl_col_1.classList.add('col');
+    const cl_label_1 = document.createElement('label');
+    cl_label_1.setAttribute('for', client[0] + '_name');
+    cl_label_1.classList.add('mb-2');
+    cl_label_1.append('Nome do cliente');
+    const cl_input_1 = document.createElement('input');
+    cl_input_1.setAttribute('type', 'text');
+    cl_input_1.setAttribute('id', client[0] + '_name');
+    cl_input_1.setAttribute('value', client[1]);
+    cl_input_1.classList.add('form-control');
+
+    const cl_col_2 = document.createElement('div');
+    cl_col_2.classList.add('col');
+    const cl_label_2 = document.createElement('label');
+    cl_label_2.setAttribute('for', client[0] + '_cpf');
+    cl_label_2.classList.add('mb-2');
+    cl_label_2.append('Número do CPF');
+    const cl_input_2 = document.createElement('input');
+    cl_input_2.setAttribute('type', 'text');
+    cl_input_2.setAttribute('id', client[0] + '_cpf');
+    cl_input_2.setAttribute('value', client[2]);
+    cl_input_2.classList.add('form-control');
+
+    const cl_row_2 = document.createElement('div');
+    cl_row_2.classList.add('row', 'd-flex', 'mb-3');
+
+    const cl_col_3 = document.createElement('div');
+    const cl_col_4 = document.createElement('div');
+    const cl_col_5 = document.createElement('div');
+    cl_col_3.classList.add('col');
+    cl_col_4.classList.add('col');
+    cl_col_5.classList.add('col');
+
+    const cl_label_3 = document.createElement('label');
+    const cl_label_4 = document.createElement('label');
+    const cl_label_5 = document.createElement('label');
+    cl_label_3.classList.add('mb-2');
+    cl_label_3.setAttribute('for', client[0] + '_dn');
+    cl_label_3.append('Data de nascimento');
+    cl_label_4.classList.add('mb-2');
+    cl_label_4.setAttribute('for', client[0] + '_tel');
+    cl_label_4.append('Telefone');
+    cl_label_5.classList.add('mb-2');
+    cl_label_5.setAttribute('for', client[0] + '_cel');
+    cl_label_5.append('Celular');
+
+    const cl_input_3 = document.createElement('input');
+    const cl_input_4 = document.createElement('input');
+    const cl_input_5 = document.createElement('input');
+    cl_input_3.setAttribute('type', 'date');
+    cl_input_3.setAttribute('id', client[0] + '_dn');
+    cl_input_3.setAttribute('value', client[3]);
+    cl_input_3.classList.add('form-control');
+    cl_input_4.setAttribute('type', 'number');
+    cl_input_4.setAttribute('id', client[0] + '_tel');
+    cl_input_4.setAttribute('value', client[4]);
+    cl_input_4.classList.add('form-control');
+    cl_input_5.setAttribute('type', 'number');
+    cl_input_5.setAttribute('id', client[0] + '_cel');
+    cl_input_5.setAttribute('value', client[5]);
+    cl_input_5.classList.add('form-control');
+
+    const button_1 = document.createElement('button');
+    button_1.classList.add('btn', 'btn-primary');
+    button_1.setAttribute('id', client[0] + '_change');
+    button_1.append('Salvar alterações');
+
+    
+    cl_col_1.append(cl_label_1)
+    cl_col_2.append(cl_label_2)
+    cl_col_3.append(cl_label_3);
+    cl_col_4.append(cl_label_4);
+    cl_col_5.append(cl_label_5);
+
+    cl_col_1.append(cl_input_1);
+    cl_col_2.append(cl_input_2);
+    cl_col_3.append(cl_input_3);
+    cl_col_4.append(cl_input_4);
+    cl_col_5.append(cl_input_5);
+
+    cl_row_1.append(cl_col_1);
+    cl_row_1.append(cl_col_2);
+    cl_row_2.append(cl_col_3);
+    cl_row_2.append(cl_col_4);
+    cl_row_2.append(cl_col_5);
+
+    cl_form.append(cl_row_1)
+    cl_form.append(cl_row_2)
+    cl_form.append(button_1);
+    clients_list_info_div.append(cl_form);
     clients_list_info.append(clients_list_info_div);
     clients_list_item.append(clients_list_info);
+
     document.getElementById(client[0] + '_change').addEventListener('click', async (e) => {
       e.preventDefault();
       let database = await db;
@@ -407,6 +476,27 @@
       const clientData = database.exec(updateQuery, [new_name, new_cpf, new_data, new_tel, new_cel, Number(client[0])]);
       getClients();
     })
+  }
+
+  const getAddresses = async (clientId) => {
+    let database = await db;
+    const clients_addresses = database.exec(`SELECT * FROM addresses WHERE clientId = ?`, [clientId]);
+    if (clients_addresses[0]?.values.length > 0) {
+      const address_list = document.createElement('ul');
+      address_list.classList.add('list-group');
+      // let returnedList = '<ul class"list-group">';
+      clients_addresses[0].values.forEach((item) => {
+        const diff_address = document.createElement('li');
+        diff_address.classList.add('list-group-item');
+        diff_address.append(item[2]);
+        address_list.append(diff_address);
+        // returnedList += `<li class="list-group-item">${item[2]}</li>`
+      })
+      // returnedList += '</ul>'
+      console.log(address_list);
+      return address_list;
+    }
+    return 'Cliente sem endereço cadastrado';
   }
 
   const getClients = async () => {
@@ -425,8 +515,6 @@
     }
   };
   getClients();
-
-  document.querySelector('#cadastro_btn').setAttribute('disabled', true);
 
   async function loginUser(payload) {
     let database = await db;
@@ -484,6 +572,9 @@
     appendNewClient(savedClient[0].values[0])
     return alert('Cliente cadastrado!');
   }
+
+  // Libera sistema mediante login
+  // document.querySelector('#cadastro_btn').setAttribute('disabled', true);
 </script>
 
 </html>

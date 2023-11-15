@@ -1,3 +1,15 @@
-Como rodar este projeto?
+Rodar o projeto localmente:
+- Abra o arquivo index.html no VSCode e clique em Live
 
-Abra o arquivo index.html no VSCode e clique em Live
+Instruções de uso:
+- Acesse a tela de Login e utilize os dados criados no SQLite junto com as tabelas: admin/password.
+- Se desejar criar um usuário novo, insira Usuário e Senha e clique em Novo usuário.
+- Os dados válidos desbloqueiam o botão Sistema
+
+Sistema de clientes:
+- Foram criados dois clientes que são listados na tela (clique para alterar os dados).
+- Para criar novo usuário, clique em Cadastrar novo cliente.
+
+To-do list:
+- Exclusão de clientes;
+- 
