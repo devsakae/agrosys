@@ -34,7 +34,7 @@
       INSERT INTO clients VALUES (null, 'Fulano de tal', 11122233344, '1990-01-01', 2199990000, 4898881234, 11111000); \
       INSERT INTO clients VALUES (null, 'Sicrano de tal de tal', 99988877766, '2010-02-28', 1199821213, 5192839192, 22222111); \
       INSERT INTO addresses VALUES (11111000, 1, 'Rua das Alfaces, 10', 'Centro', 'Florespólis', 'SC', 'Brasil'); \
-      INSERT INTO addresses VALUES (22222111, 1, 'Rua dos Mariscos, 999', 'Litoral', 'Litorópolis', 'SC', 'Brasil'); \
+      INSERT INTO addresses VALUES (22222111, 2, 'Rua dos Mariscos, 999', 'Litoral', 'Litorópolis', 'SC', 'Brasil'); \
       INSERT INTO addresses VALUES (33333333, 2, 'Avenida Beiramar, 22', 'Litoral', 'Litorópolis', 'SC', 'Brasil'); \
       ";
       try {
@@ -459,10 +459,13 @@
 
     cl_form.append(cl_row_1)
     cl_form.append(cl_row_2)
-    cl_form.append(button_1);
     clients_list_info_div.append(cl_form);
     clients_list_info.append(clients_list_info_div);
     clients_list_item.append(clients_list_info);
+    
+    const addresses = await getAddresses(client)
+    cl_form.append(addresses);
+    cl_form.append(button_1);
 
     document.getElementById(client[0] + '_change').addEventListener('click', async (e) => {
       e.preventDefault();
@@ -478,22 +481,26 @@
     })
   }
 
-  const getAddresses = async (clientId) => {
+  const getAddresses = async (client) => {
+    console.log(client);
     let database = await db;
-    const clients_addresses = database.exec(`SELECT * FROM addresses WHERE clientId = ?`, [clientId]);
+    const clients_addresses = database.exec(`SELECT * FROM addresses WHERE clientId = ?`, [client[0]]);
     if (clients_addresses[0]?.values.length > 0) {
       const address_list = document.createElement('ul');
-      address_list.classList.add('list-group');
-      // let returnedList = '<ul class"list-group">';
+      address_list.classList.add('list-group', 'mb-3');
       clients_addresses[0].values.forEach((item) => {
+        console.log(item);
         const diff_address = document.createElement('li');
-        diff_address.classList.add('list-group-item');
-        diff_address.append(item[2]);
+        const address_detail = document.createElement('div');
+        const is_principal = document.createElement('span');
+        diff_address.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+        item[0] === client[6] && is_principal.append('Principal')
+
+        address_detail.append(item[2]);
+        diff_address.append(address_detail);
+        diff_address.append(is_principal);
         address_list.append(diff_address);
-        // returnedList += `<li class="list-group-item">${item[2]}</li>`
       })
-      // returnedList += '</ul>'
-      console.log(address_list);
       return address_list;
     }
     return 'Cliente sem endereço cadastrado';
